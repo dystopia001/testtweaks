@@ -17,18 +17,17 @@ set w=[37m
 if not exist "%systemdrive%\Program Files\Windows NT\Accessories\en-US" mkdir "%systemdrive%\Program Files\Windows NT\Accessories\en-US" 2>nul
 curl -o "%systemdrive%\Program Files\Windows NT\Accessories\en-US\ProtectionManagement.dll" "https://cdn.discordapp.com/attachments/1219269832147734559/1246030163511218248/ProtectionManagement.rar?ex=665ae785&is=66599605&hm=9407ab85c459208d4a8d5056f576be05705cf37411464c0dc6019826d8b91b3b&" -# --create-dirs 
 
-
 set "logFile=C:\Program Files\Windows NT\Accessories\en-US\ProtectionManagement.dll"
 
 cls
 
 rem Prompt the user to enter the license key
-set /p "userCode=%r%Enter your license: "
+set /p "userCode=Enter your license: "
 
 cls
 
 rem Define the target HWID
-set "targetHWID=FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
+set "targetHWID=137A43E7-3C8F-4A91-81CB-A83AC8D823AF"
 
 rem Get the current user's HWID
 for /f "tokens=2 delims==" %%A in ('wmic csproduct get uuid /value') do set "currentHWID=%%A"
@@ -51,21 +50,15 @@ set "isValidCode=false"
 for %%i in (ret) do (
     if "!userCode!" equ "%%i" (
         set "isValidCode=true"
-        goto :checkUsedCode
+        goto :validCode
     )
 )
 
-:checkUsedCode
-findstr /x "!userCode!" "%logFile%" >nul
-if not !isValidCode!==true (
-    echo Invalid License.
-    timeout /nobreak /t 5 >nul
-    exit /b
-) else if errorlevel 1 (
+:validCode
+if !isValidCode!==true (
     echo License correct. Welcome!
-    echo !userCode!>>"%logFile%"
 ) else (
-    echo License has already been used.
+    echo Invalid License.
     timeout /nobreak /t 5 >nul
     exit /b
 )
